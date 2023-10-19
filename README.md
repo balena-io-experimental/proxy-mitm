@@ -1,6 +1,6 @@
 # Mitmproxy & Redsocks
 
-Guide for exploring balenaOS [Redsocks](https://github.com/darkk/redsocks) proxy usage with [Mitmproxy](https://mitmproxy.org/)
+Step-by-step guide for exploring balenaOS [Redsocks](https://github.com/darkk/redsocks) proxy usage with [Mitmproxy](https://mitmproxy.org/)
 
 ## Contents
 
@@ -11,7 +11,11 @@ Guide for exploring balenaOS [Redsocks](https://github.com/darkk/redsocks) proxy
 - [Verify Proxy](#verify-proxy)
 - [Store Mitmproxy Certificate](#store-mitmproxy-certificate)
 - [Client Device](#client-device)
+- [Configure config.json](#configure-configjson)
+- [Configure Redsocks](#configure-redsocks)
 - [Captured Requests](#captured-requests)
+- [Redsocks Iptables](#redsocks-iptables)
+- [Excluding IP Addresses](#excluding-ip-addresses)
 
 ## Requirements
 
