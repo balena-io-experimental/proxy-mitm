@@ -16,6 +16,7 @@ Step-by-step guide to explore balenaOS [Redsocks](https://github.com/darkk/redso
 - [Captured Requests](#captured-requests)
 - [Redsocks Iptables](#redsocks-iptables)
 - [Excluding IP Addresses](#excluding-ip-addresses)
+- [Going to Production](#going-to-production)
 
 ## Requirements
 
