@@ -126,3 +126,7 @@ Next, exclude the `1.1.1.1` address from Redsocks by running `iptables -t nat -I
 Clear all captured requests and run `curl https://1.1.1.1/` again. This time, the request will go directly to the '1,1,1,1' Cloudflare server and will not pass through the proxy. You can verify this by checking the Mitmweb UI.
 
 Please note that iptables rules added through a host OS terminal will not persist upon reboots. For production usage, these rules should be added from a container. Alternatively, they can be added through [NetworkManager User Scripts](https://docs.balena.io/reference/OS/network/#networkmanager-user-scripts) as well.
+
+## Going to Production
+
+The Mitmproxy solution is primarily useful for exploration and debugging purposes. For production usage, we do not have any official recommendations, but you might consider a well-established proxy server such as Squid Cache or Nginx Proxy.
