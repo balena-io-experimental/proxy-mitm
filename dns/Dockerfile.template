@@ -1,0 +1,9 @@
+FROM balenalib/%%BALENA_MACHINE_NAME%%-fedora:38
+
+RUN dnf install -y stubby
+
+WORKDIR /opt/stubby
+
+COPY stubby.yml .
+
+CMD ["stubby", "-C", "stubby.yml"]
