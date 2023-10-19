@@ -25,9 +25,9 @@ Required is basic understanding on how to operate balena devices.
 
 Create two separate balena fleets called `proxy-mitm` and `proxy-client`.
 
-The `proxy-mitm` fleet will have one device only that runs a proxy service and a DNS forwarder.
+The `proxy-mitm` fleet should only have one device added to it. That device will run a proxy service and a DNS forwarder.
 
-The `proxy-client` fleet could be used by multiple devices that have their Redsocks proxy configured.
+The `proxy-client` fleet could be used by multiple devices. Those devices will have their Redsocks proxy client configured and pointed to the device from the `proxy-mitm` fleet.
 
 ## Proxy Device
 
