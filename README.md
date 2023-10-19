@@ -1,19 +1,21 @@
 # Mitmproxy & Redsocks
 
-Setup guide for exploring balenaOS proxy settings using Mitmproxy
+Guide for exploring balenaOS [Redsocks](https://github.com/darkk/redsocks) proxy usage with [Mitmproxy](https://mitmproxy.org/)
 
 ## Contents
 
-- [Requirements](#requirements)
 - [Contents](#contents)
+- [Requirements](#requirements)
 - [Create Fleets](#create-fleets)
 - [Proxy Device](#proxy-device)
 - [Verify Proxy](#verify-proxy)
-- [Mitmweb](#mitmweb)
+- [Store Mitmproxy Certificate](#store-mitmproxy-certificate)
+- [Client Device](#client-device)
+- [Captured Requests](#captured-requests)
 
 ## Requirements
 
-You need some understanding on how to operate balena devices. This is not a [getting started guide](https://docs.balena.io/learn/getting-started). 
+Required is basic understanding on how to operate balena devices.
 
 ## Create Fleets
 
@@ -39,11 +41,23 @@ From the balena dashboard take note of the local IP address of the device. In th
 
 ## Verify Proxy
 
-After provisioning and running the proxy device verify that the proxy is running by opening `http://192.168.111.36:8081/` in your browser.
+After provisioning and running the proxy device verify that the proxy is running by opening `http://192.168.111.36:8081/` in your browser. This would display the Mitmweb UI with no captured requests listed.
 
-From your development machine run `nslookup www.balena.io 192.168.111.36` to verify that the DNS forwarder is functioning properly.
+From your development machine or another device on the same network run `nslookup www.balena.io 192.168.111.36` to verify that the DNS forwarder is functioning properly.
 
-## Mitmweb Web Interface
+## Store Mitmproxy Certificate
+
+Open a terminal to the `proxy` container of the proxy device.
+
+Run `cat ~/.mitmproxy/mitmproxy-ca-cert.pem | base64 -w 0` and store the produced string on your development machine. It is a long base64 single line string that ends with `=` (e.g. `LS0tLS1CRU ... UtLS0tLQo=`). This is the encoded self-generated certificate of Mitmproxy and will be used on the devices from the `proxy-client` fleet.
+
+## Client Device
+
+Provision a device with the `proxy-client` fleet created at the beginning. It does not have any pushed application code and containers to it yet as this is not needed yet.
+
+Connect the client device to the same local network and start it.
+
+## Captured Requests
 
 ![mitmweb](https://github.com/balena-io-experimental/proxy-mitm/assets/188837/9a305984-7495-4870-b98a-d9d8f439cbba)
 
