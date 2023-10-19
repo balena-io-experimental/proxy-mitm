@@ -1,0 +1,10 @@
+version: "2.4"
+services:
+  proxy:
+    build: ./proxy
+    network_mode: "host"
+    privileged: true
+  dns:
+    build: ./dns
+    network_mode: "host"
+    privileged: true
