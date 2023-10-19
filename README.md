@@ -1,6 +1,6 @@
 # Mitmproxy & Redsocks
 
-Step-by-step guide for exploring balenaOS [Redsocks](https://github.com/darkk/redsocks) proxy usage with [Mitmproxy](https://mitmproxy.org/)
+Step-by-step guide to explore balenaOS [Redsocks](https://github.com/darkk/redsocks) proxy usage with [Mitmproxy](https://mitmproxy.org/)
 
 ## Contents
 
@@ -19,53 +19,53 @@ Step-by-step guide for exploring balenaOS [Redsocks](https://github.com/darkk/re
 
 ## Requirements
 
-Required is basic understanding on how to operate balena devices.
+Basic understanding of how to operate balena devices is required.
 
 ## Create Fleets
 
-Create two separate balena fleets called `proxy-mitm` and `proxy-client`.
+Create two distinct balena fleets named 'proxy-mitm' and 'proxy-client'.
 
-The `proxy-mitm` fleet should only have one device added to it. That device will run a proxy service and a DNS forwarder.
+The 'proxy-mitm' fleet will consist of only one device responsible for operating a proxy service and a DNS forwarder.
 
-The `proxy-client` fleet could be used by multiple devices. Those devices will have their Redsocks proxy client configured and pointed to the device from the `proxy-mitm` fleet.
+The 'proxy-client' fleet can accommodate multiple devices with the same Redsocks proxy configuration.
 
 ## Proxy Device
 
-Push this repository towards the `proxy-mitm` fleet and provision the proxy device with it. This could be a physical balena device or a virtual device.
+Push this repository to the 'proxy-mitm' fleet and provision the proxy device with it. The device can be a physical balena device or a virtual device.
 
-One good option is using Virtual Machine Manager (virt-manager) with a "Generic x86_64 (GPT)" image, but please use device type that is most convenient for you.
+One good option is to use Virtual Machine Manager (virt-manager) with a "Generic x86_64 (GPT)" image, but please select the device type that is most convenient for you.
 
-The device should be easily accessible through a local physical or virtual network.
+Ensure that the device is easily accessible through a local physical or virtual network.
 
 Since the device will be used for exploration and debugging purposes, it is a good practice to provision it in [development mode](https://docs.balena.io/reference/OS/configuration/#developmentmode).
 
 Connect the proxy device to a local network and start it.
 
-From the balena dashboard take note of the local IP address of the device. In this README we will be using the `192.168.111.36` IP address, but that would be different in your setup.
+From the balena dashboard, take note of the local IP address of the device. In this README, we will be using the `192.168.111.36` IP address, but it may differ in your setup.
 
 ## Verify Proxy
 
-After provisioning and running the proxy device verify that the proxy is running by opening `http://192.168.111.36:8081/` in your browser. This would display the Mitmweb UI with no captured requests listed.
+After provisioning and running the proxy device, verify that the proxy is operational by opening `http://192.168.111.36:8081/` in your browser. This should display the Mitmweb UI with no captured requests listed.
 
-From your development machine or another device on the same network run `nslookup www.balena.io 192.168.111.36` to verify that the DNS forwarder is functioning properly.
+From your development machine or another device on the same network, execute the command `nslookup www.balena.io 192.168.111.36` to confirm the proper functioning of the DNS forwarder.
 
 ## Store Mitmproxy Certificate
 
-Open a terminal to the `proxy` container of the proxy device.
+Open a terminal to the 'proxy' container of the proxy device.
 
-Run `cat ~/.mitmproxy/mitmproxy-ca-cert.pem | base64 -w 0` and store the produced string on your development computer. It is a long base64 single line string that ends with `=` (e.g. `LS0tLS1CRU ... UtLS0tLQo=`). This is the encoded self-generated certificate of Mitmproxy and will be used on the devices from the `proxy-client` fleet.
+Execute the command `cat ~/.mitmproxy/mitmproxy-ca-cert.pem | base64 -w 0` and store the resulting string on your development computer. It is a lengthy base64 single line string that concludes with `=` (e.g., `LS0tLS1CRU ... UtLS0tLQo=`). This encoded string is the self-generated Mitmproxy certificate and will be utilized on the devices from the 'proxy-client' fleet.
 
 ## Client Device
 
-Provision a device with the `proxy-client` fleet created at the beginning. You do not need to push any application code and containers to it yet.
+Provision a device with the 'proxy-client' fleet created at the beginning. You do not need to push any application code or containers to it at this stage.
 
 Connect the client device to the same local network and start it.
 
 ## Configure config.json
 
-Add `"dnsServers": "192.168.111.36"` entry to the config.json to use the DNS forwarder on the proxy device. Depending on how you have configured your local network you may not need it at all, but it is added for convenience.
+Add the entry `"dnsServers": "192.168.111.36"` to the config.json to utilize the DNS forwarder on the proxy device. Depending on your local network configuration, you may not need this entry, but it is included for convenience.
 
-Add `"balenaRootCA": "LS0tLS1CRU ... UtLS0tLQo="` entry with the saved encoded Mitmproxy certificate. This is needed by the proxy in order to decode HTTPS content. In a normal proxy setting this won't be usually needed, but it is another huge convenience for debugging and exploration purposes.
+Include the entry `"balenaRootCA": "LS0tLS1CRU ... UtLS0tLQo="` with the saved encoded Mitmproxy certificate. This is necessary for the proxy to decode HTTPS content. While this may not typically be required in a regular proxy setup, it is needed here for debugging and exploration purposes.
 
 ## Configure Redsocks
 
@@ -91,9 +91,9 @@ redsocks {
 }
 ```
 
-As usual replace the `192.168.111.36` address with the local address of the proxy device.
+As usual, replace the `192.168.111.36` address with the local address of the proxy device.
 
-Run `mv /mnt/boot/system-proxy/redsocks.conf.ignore /mnt/boot/system-proxy/redsocks.conf` in order to enable the new Redsocks configuration.
+Execute the command `mv /mnt/boot/system-proxy/redsocks.conf.ignore /mnt/boot/system-proxy/redsocks.conf` to activate the new Redsocks configuration.
 
 Reboot the device.
 
@@ -107,22 +107,22 @@ Note: The unencoded TCP traffic in the above screenshot is the traffic from the 
 
 ## Redsocks Iptables
 
-In order for Redsocks to capture and redirect traffic from the client device to the proxy it needs a set of iptables rules. It is out of the scope of this document to describe those in detail, but the Redsocks README contains such [short description](https://github.com/darkk/redsocks#iptables-example).
+In order for Redsocks to capture and redirect traffic from the client device to the proxy, it requires a set of iptables rules. While it is beyond the scope of this document to describe them in detail, the Redsocks README provides a brief description, which can be found [here](https://github.com/darkk/redsocks#iptables-example).
 
-Under balenaOS those rules are added automatically. You may check them on a client device by running `iptables -t nat -L -n`.
+Under balenaOS, these rules are automatically added. You can verify them on a client device by running `iptables -t nat -L -n`.
 
-Take notice of the `10.0.0.0/8`, `100.64.0.0/10` and `169.254.0.0/16` ranges in the REDSOCKS chain. Those are private IP address ranges and as it should be expected connections to such addresses will not be redirected to the proxy. In the next section the same technique will be used to exclude Internet public IP addresses.
+Take notice of the `10.0.0.0/8`, `100.64.0.0/10`, and `169.254.0.0/16` ranges in the REDSOCKS chain. These are private IP address ranges, and as expected, connections to such addresses should not be redirected to the proxy. The next section will use the same technique to exclude public Internet IP addresses.
 
 ## Excluding IP Addresses
 
-If you would like to exclude certain IP addresses from the Redsocks configuration, so that your device reaches them directly, you need to modify the REDSOCKS NAT chain.
+If you wish to exclude specific IP addresses from the Redsocks configuration, allowing your device to reach them directly, you'll need to modify the REDSOCKS NAT chain.
 
-First clear all the captured requests from the Mitmproxy UI (File/Clear all).
+Start by clearing all the captured requests from the Mitmproxy UI (select File, then Clear all).
 
-From a host OS terminal on the client device run `curl https://1.1.1.1/`. Now check the Mitmweb UI and you should see the proxied decoded request to `https://1.1.1.1/`.
+From a host OS terminal on the client device, execute `curl https://1.1.1.1/`. Check the Mitmweb UI to confirm that the proxied decoded request to `https://1.1.1.1/` is visible.
 
-Next exlude the `1.1.1.1` address from Redsocks by running `iptables -t nat -I REDSOCKS 1 -d 1.1.1.1 -j RETURN`. You may check the REDSOCKS chain to see the newly added rule on top of it with `iptables -t nat -L -n`.
+Next, exclude the `1.1.1.1` address from Redsocks by running `iptables -t nat -I REDSOCKS 1 -d 1.1.1.1 -j RETURN`. You can check the REDSOCKS chain to view the newly added rule at the top by executing `iptables -t nat -L -n`.
 
-Clear all captured requests and run again `curl https://1.1.1.1/`. Now the request goes directly to the Cloudflare server and does not pass through the proxy. You can verify that by checking the Mitmweb UI.
+Clear all captured requests and run `curl https://1.1.1.1/` again. This time, the request will go directly to the '1,1,1,1' Cloudflare server and will not pass through the proxy. You can verify this by checking the Mitmweb UI.
 
-Iptables rules added through a host OS terminal will not be persisted upon reboots and for production usage those should be added from a container. Alternatively those can be added through [NetworkManager User Scripts](https://docs.balena.io/reference/OS/network/#networkmanager-user-scripts) as well.
+Please note that iptables rules added through a host OS terminal will not persist upon reboots. For production usage, these rules should be added from a container. Alternatively, they can be added through [NetworkManager User Scripts](https://docs.balena.io/reference/OS/network/#networkmanager-user-scripts) as well.
